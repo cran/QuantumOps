@@ -19,5 +19,5 @@ Reports the distance between two vectors/kets
 }
 
 \examples{
- tensor(ket(1,1,1,1),ket(1,0,0,1))
+ dist(ket(1,1,1,1),ket(1,0,0,1))
 }

@@ -1,10 +1,9 @@
 #make controlled version of input gate
 #' @export
-controlled <- function(gate){
-	g <- mm(1,0,0,0, 0,1,0,0 , 0,0,0,0,0,0,0,0)
-	g[3,3] <- gate[1,1]
-	g[3,4] <- gate[1,2]
-	g[4,3] <- gate[2,1]
-	g[4,4] <- gate[2,2]
+controlled <- function(gate,nCQubits=1){
+	d <- dim(gate)[1]		#side length of input gate
+	D <- 2^(nCQubits+1)		#side legnth of controlled version
+	g <- diag(1,D,D)		#create diagonal matrix
+	g[ (D-d+1):D , (D-d+1):D ] <- gate	#set lower right (all control qubits = 1) to input gate
 	g
 }

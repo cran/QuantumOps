@@ -17,5 +17,5 @@ Determines whether an operation (matrix) is hermitian by comparing it to its adj
 }
 
 \examples{
- hermitian(mm(0,1,1,0))
+ hermitian(matrix(c(0,1,1,0),nrow=2))
 }
