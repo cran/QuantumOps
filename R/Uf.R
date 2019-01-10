@@ -6,7 +6,7 @@ Uf <- function(fun,n,m){
 	#Iterate over each 2^n inputs
 	for(x in 0:(2^n-1)){
 		#compute f(x), which will determine the matrix along the diagonal
-		b <- as.character(rev(intToBits(f(x))))
+		b <- as.character(rev(intToBits(f(x))))					#get bit string of function output
 		l <- length(b)
 		if(b[l-m+1] == "00"){
 			g <- I()
@@ -23,6 +23,9 @@ Uf <- function(fun,n,m){
 			}
 		}
 		Um[ ((2^m)*x+1):((2^m)*(x+1)) , ((2^m)*x+1):((2^m)*(x+1)) ] <- g
+		#print(((2^m)*x+1):((2^m)*(x+1)))
+		#print(((2^m)*x+1):((2^m)*(x+1)))
+		#print(g)
 	}
 	Um
 }

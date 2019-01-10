@@ -33,5 +33,5 @@ dirac <- function(ket){
 			s <- paste(s,signif(v,digits=3),istring,"|",b,">",sep="")						#copy into dirac rep
 		}
 	}
-	print(s)
+	s
 }

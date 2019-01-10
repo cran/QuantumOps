@@ -31,3 +31,8 @@ export(unitary)
 export(I)
 export(U)
 export(Uf)
+export(addmod2)
+export(dotmod2)
+export(QFT)
+
+
