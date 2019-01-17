@@ -34,5 +34,10 @@ export(Uf)
 export(addmod2)
 export(dotmod2)
 export(QFT)
-
+export(intket)
+export(measure)
+export(reduceMeasure)
+export(Shor)
+export(CFA)
+export(exponentialMod)
 

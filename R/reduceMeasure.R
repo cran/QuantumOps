@@ -1,6 +1,6 @@
 #bit-wise mod 2 add two integers
 #' @export
-measure <- function(...){
+reduceMeasure <- function(...){
 	input <- list(...)
 	qstate <- unlist(input[[1]])
 	p <- probs(as.complex(qstate))
@@ -41,8 +41,7 @@ measure <- function(...){
 		}
 
 		#indices is list of indices at which state could still be
-		amplitudes <- input[[1]]
-		amplitudes[-indices] <- rep(0,length(amplitudes)-length(indices))		#set amplitudes of not possible states to 0
+		amplitudes <- input[[1]][indices]				#take subset of input ket
 		k <- do.call(ket,as.list(amplitudes))
 		list(k,m-1)
 	}
