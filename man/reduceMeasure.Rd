@@ -10,11 +10,11 @@ reduceMeasure(...)
 }
 
 \value{
-A list with the first item a column vector containing normalized amplitudes of the measured ket and the second item the integer value of the state which was measured
+A list with the first item a column vector containing normalized amplitudes of the measured ket and the second item the integer value of the state which was measured. If a list of qubits to measure was specified as an argument, there is a 3rd item in the list which is a vector of the binary measured
 }
 
 \description{
-Probabilistically measures the input ket and reduces the size of ket by removing the measured qubits. By default measures all qubits, but if a list of integers is supplied it will measure only those qubits. Returns the state of the ket after measurement along with integer value of the state that was measured.
+Probabilistically measures the input ket and reduces the size of ket by removing the measured qubits. By default measures all qubits, but if a list of integers is supplied it will measure only those qubits. Returns the state of the ket after measurement along with integer value of the state that was measured. Additionally, returns a vector of the measured binary value if a list of qubits to measure was specified. 
 }
 
 \examples{

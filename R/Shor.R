@@ -95,7 +95,7 @@ Shor <- function(N,trials=150,random=FALSE){
 			#}
 			#print("Max amplitudes")
 			#print(mvals-1)
-
+			#back <- v
 			vv <- measure(v)
 			v <- vv[[1]]
 			y <- vv[[2]]
@@ -118,6 +118,7 @@ Shor <- function(N,trials=150,random=FALSE){
 					print("Odd period: Failure (Reattempt)")
 				} else{
 					success <- TRUE
+					#return(back)
 				}
 			} else{
 				print("Period Finding: Failure (Reattempt)")

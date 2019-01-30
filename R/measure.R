@@ -44,7 +44,7 @@ measure <- function(...){
 		amplitudes <- input[[1]]
 		amplitudes[-indices] <- rep(0,length(amplitudes)-length(indices))		#set amplitudes of not possible states to 0
 		k <- do.call(ket,as.list(amplitudes))
-		list(k,m-1)
+		list(k,m-1,b[m,mqubits])
 	}
 }
 

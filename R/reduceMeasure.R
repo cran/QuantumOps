@@ -43,7 +43,7 @@ reduceMeasure <- function(...){
 		#indices is list of indices at which state could still be
 		amplitudes <- input[[1]][indices]				#take subset of input ket
 		k <- do.call(ket,as.list(amplitudes))
-		list(k,m-1)
+		list(k,m-1,b[m,mqubits])
 	}
 }
 
