@@ -11,11 +11,11 @@ R(theta,...)
 }
 
 \value{
-Matix of the RZ gate or ket after an R gate is applied
+Matix of the R gate or ket after an R gate is applied
 }
 
 \description{
-If no second argument is supplied, returns the matrix of an R phase gate of the specified radians. If ket given as second argument, applies the R gate to the input ket and returns the resulting ket
+If no second argument is supplied, returns the matrix of an R phase gate of the specified radians. If ket given as second argument, applies the R gate to the input ket and returns the resulting ket. Is equivalent to the more recently added Rz function.
 }
 
 \examples{

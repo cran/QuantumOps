@@ -148,8 +148,7 @@ QuantumMNIST256Classifier <- function(data,labels,digit=0,eta=1,decay=1,bsc=1,t=
 			p <- qapp(x,m)
 
 			Ep <- prob1(p)				#Get probability of measuring 1
-			#px <- Ep/2 + 1/2 + bias		#Get output of network
-			px <- Ep + bias				#Above formula is for expectation [-1,1], if using prob, its just + bias
+			px <- Ep + bias				#Get output of network
 
 			p1[y+1,tr] <- p1[y+1,tr] + Ep		#Record for overall training graph
 			pix[y+1,tr] <- pix[y+1,tr] + px		#normalize later
