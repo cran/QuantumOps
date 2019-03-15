@@ -9,4 +9,4 @@ unitary <- function(m,epsilon=1e-13){
 		all(Im(solve(m)) > Im((adjoint(m)-epsilon*i)) 		) && 
 		all(Im(solve(m)) < Im(adjoint(m)+epsilon*i)  		)
 		)
-}
+} 
