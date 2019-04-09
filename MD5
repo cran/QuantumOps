@@ -1,5 +1,5 @@
-a9b15f80bf6947861a91cd36963e3e0a *DESCRIPTION
-de4283033f9f2b6098f6f6756442b15c *NAMESPACE
+184fcc3c72885ef3e9d2f5cafc4c8738 *DESCRIPTION
+3cd38be7b97280018a4d851018fbc0db *NAMESPACE
 c794b0ee60c141500107e692832d3da3 *R/BELL.R
 fb4f64761836a575a56a2e8f50f8e10a *R/CFA.R
 ad2f55db6cb9a9b7faa69adf0cb8e018 *R/CX.R
@@ -14,8 +14,9 @@ d6823854626168b10447776bcf9898db *R/DFT.R
 900365fdb5038dcc4722377cf748946b *R/I.R
 95bfb12f3ceba44250c8508175625007 *R/QAOA.R
 9ba135a43c35412622c57a7924b20fdd *R/QAOA_example.R
+2b925b4ff96e2a06e1d42d3fbff9e7ec *R/QAOA_maxcut.R
 8bc3d1ca198ec9d46036d32e29efdee1 *R/QFT.R
-9e3d4c08b8ea2cd8740b1dfd4a981ee2 *R/QuantumMNIST256Classifier.R
+ac765f9cd91b9017a928301379678f84 *R/QuantumMNIST256Classifier.R
 5283ca618b8c2a75cac6037fb6c3c677 *R/R.R
 93aab521431bfd437411e28330c381ad *R/Rx.R
 6aec0d8e9266d43f1e951f467f76380f *R/Ry.R
@@ -56,6 +57,7 @@ bd26fac0f3501265d1e859a0459064ba *R/many.R
 a5474f7a92acfc9f46c5e041ba565925 *R/plotprobs.R
 65b2bfd9222aff5aea7780dccdb0fbed *R/pp.R
 d2539b29dfcac5ee81d346b664b782a8 *R/probs.R
+e7760109a00326c2db65eb3431e5ff7b *R/randomConnectionMatrix.R
 ff13b3d013942161836ed13262f10074 *R/reduceMeasure.R
 896cb8203f51cabde2168e87217cdba8 *R/single.R
 50b18760a8b5625255199b6c68125e95 *R/teleport.R
@@ -74,8 +76,9 @@ d9a184c2b7a943bec82de28cd71f7be3 *man/GroverDiffusion.Rd
 677620c66beb592a9cdb3e004caa419a *man/I.Rd
 3fb2da66d8b2fa66b6d089271ecb4673 *man/QAOA.Rd
 de4bc00416b741b80473d3ccacaf0865 *man/QAOA_example.Rd
+87a51353ec4b04b6dd1f4e0b837a9b56 *man/QAOA_maxcut.Rd
 b6c27154c8ad1b359127f7ac8686a88d *man/QFT.Rd
-8600225a915b4946d63ea04aa025ee51 *man/QuantumMNIST256Classifier.Rd
+1fbbbad701d3741738e52b787d46cb12 *man/QuantumMNIST256Classifier.Rd
 0f9fc3e3134677657c2aa48e7acd3571 *man/R.Rd
 de1e7c5fde610a2bdedec4fc82e49fe4 *man/Rx.Rd
 974f644eff580d9d2fdb0ebe8c423937 *man/Ry.Rd
@@ -113,6 +116,7 @@ e2f69777954c7c969284de5a2ccf3747 *man/norm.Rd
 d503136f94ea96a10b93fd4516c6ba88 *man/plotprobs.Rd
 10d8d5a92c504fd3d8dd2c174965e83f *man/pp.Rd
 0ec37300a33fc9b0a155a35993d44e15 *man/probs.Rd
+9c9cf66410d2d0d3d7964514987f7923 *man/randomConnectionMatrix.Rd
 e758f643d8bc37c0cd4f4b8624862e3b *man/reduceMeasure.Rd
 c75118b44972544982ac96a1ef21a07b *man/single.Rd
 50b6e528140c77c0304fae3add136f47 *man/teleport.Rd

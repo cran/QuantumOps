@@ -2,10 +2,14 @@
 \alias{QuantumMNIST256Classifier}
 \title{QuantumMNIST256Classifier}
 \usage{
-QuantumMNIST256Classifier(data,labels,digit=0,eta=1,decay=1,bsc=1,t=20,tag="",pl=TRUE)
+QuantumMNIST256Classifier(
+	data=NULL,labels=NULL,digit=0,
+	eta=1,decay=1,bsc=1,t=20,tag="",pl=TRUE,train=TRUE,
+	validT=FALSE,vdata=NULL,vlabels=NULL,
+	pretrained=FALSE,alpha=NULL,beta=NULL,gamma=NULL)
 }
 \arguments{
-  \item{data}{ matrix containing input data. Rows are individual samples. There must be 256 columns }
+  \item{data}{ matrix containing input training data. Rows are individual samples. There must be 256 columns }
 
   \item{labels}{ Vector containing labels of digits. Length must be the same as the number of rows in data }
 
@@ -22,6 +26,22 @@ QuantumMNIST256Classifier(data,labels,digit=0,eta=1,decay=1,bsc=1,t=20,tag="",pl
   \item{tag}{ String to attach to name of output files}
 
   \item{pl}{Boolean indicating whether training output should be plotted}
+
+  \item{train}{Boolean specifying if network should trained on training data, only false if passing in pretrained model}
+
+  \item{validT}{Boolean specifying if the network should be tested on validation data while being trained}
+
+  \item{vdata}{Validation data, necessary if validT is set to true in which case network is tested on this data while being trained. Can be set to same as data.}
+
+  \item{vlabels}{Validation labels, necessary if validT is set to true in which case network is tested on vdata while being trained. Can be set to same as labels.}
+
+  \item{pretrained}{Boolean specifying if a pretrained model is being passed in. If so, alpha, beta, and gamme will be set to intputs, rather than randomized.}
+
+  \item{alpha}{alpha values for gates if pretrained is set to TRUE, should be a vector of length 33}
+
+  \item{beta}{beta values for gates if pretrained is set to TRUE, should be a vector of length 33}
+
+  \item{gamma}{gamma values for gates if pretrained is set to TRUE, should be a vector of length 33}
 }
 
 \value{

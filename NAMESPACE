@@ -59,4 +59,6 @@ export(plotprobs)
 export(QAOA)
 export(checkCases)
 export(QAOA_example)
+export(randomConnectionMatrix)
+export(QAOA_maxcut)
 
