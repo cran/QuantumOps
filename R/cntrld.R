@@ -5,7 +5,7 @@ cntrld <- function(gate,n,...){
 	CQubits <- qbitlist[-length(qbitlist)]			#control qubits are all but last
 	nCQubits <- length(CQubits)						#number of control qubits
 	tQubit <- qbitlist[length(qbitlist)]			#target qubit is last
-	
+
 	d <- dim(gate)[1]		#side length of input gate
 	D <- 2^n	#side length of controlled version
 	g <- diag(1,D,D)		#create diagonal matrix
@@ -40,7 +40,7 @@ cntrld <- function(gate,n,...){
 
 
 	#For each basis state
-	for(j in 0:D-1){
+	for(j in 0:(D-1)){
 			if( all(b[j+1,CQubits] == 1) ){			#if all control qubits are 1
 				g[j+1,] <- operator %*% intket(j,n)	#that column is operator applied to it (gate applied to just target qubit)
 			}										#otherwise, it is the 1 on the diagonal (already)

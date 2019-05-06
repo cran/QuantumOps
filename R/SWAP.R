@@ -1,3 +1,4 @@
+
 #' @export
 SWAP <- function(...){
 	Swap <- matrix(c(1,0,0,0, 0,0,1,0, 0,1,0,0, 0,0,0,1),nrow=4,ncol=4)

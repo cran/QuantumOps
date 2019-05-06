@@ -1,6 +1,6 @@
 #bit-wise mod 2 add two integers
 #' @export
-measure <- function(...){
+measure <- function(...,l2r=FALSE){
 	input <- list(...)
 	qstate <- unlist(input[[1]])
 	p <- probs(as.complex(qstate))
@@ -18,7 +18,10 @@ measure <- function(...){
 		mqubits <- array(as.numeric(unlist(input)[-(seq(1,2^n,by=1))]))	#get list of qubits to measure
 																		#doesn't include leading ket
 
-		mqubits <- n - mqubits		#indexed in reverse (Quantum convention)
+		if(!l2r)
+			mqubits <- n - mqubits		#indexed in reverse (Quantum convention)
+		else
+			mqubits <- mqubits + 1		#R indexes from 1
 		
 		v <- seq(0,2^n-1,by=1)			#all possible values of ket
 		b <- matrix(rep(0,2^n*n),nrow=2^n)

@@ -6,16 +6,8 @@ Shor <- function(N,trials=150,random=FALSE){
 	  r <- x%%y;
 	  return(ifelse(r, gcd(y, r), y))
 	}
-	l <- ceiling(log(N,base=2))+1
-
-
-	#p <- 3
-	#q <- 5
-	#N <- p*q		#Number to factor
-	
-	a <- 6
-
-	M <- ceiling(sqrt(N))	#Known upper bound on a
+	l <- ceiling(log(N,base=2))+1						#Number of qubits needed
+	M <- ceiling(sqrt(N))								#Known upper bound on a (period)
 
 	
 
@@ -25,16 +17,13 @@ Shor <- function(N,trials=150,random=FALSE){
 	a <- 2
 	while(!modNSuccess & totaltries < trials){
 		totaltries <- totaltries + 1
-
-		#a <- N
-		#while( gcd(a,N) != 1)
-		#	a <- sample(seq(2,N-1,by=1),1)			
+		
 		#"random" number
 		if(random | ( N != 15 & N != 21 ) ){
 			while(gcd(a,N) != 1)
 				a <- a + 1
-		} else{
-			if(N == 15){
+		} else{						#Know these numbers work well
+			if(N == 15){			#In general, these are random because number to factor is new
 				a <- 2
 			} else if(N == 21){
 				a <- 8
@@ -42,15 +31,11 @@ Shor <- function(N,trials=150,random=FALSE){
 		}
 		print(paste("Attempting to factor",N,"with a chosen random number",a))
 
-		#Define function f(x) = a^x mod N
-		#f <- function(x){a^x %% N}
-		f <- exponentialMod(a,N)
-		m <- Uf(f,l,l)
-		#Test the function
-		#print("Oracle output on classical data, should be periodic")
-		#x <- seq(0,2^l-1,by=1)
-		#print(f(x))
+		#Define function f(x) = a^x mod N		Period of this function is related to prime factors
+		f <- exponentialMod(a,N)				#Replaces f <- function(x){a^x %% N}
+		m <- Uf(f,l,l)							#m is f in unitary matrix form (quantum oracle)
 
+		#Try to find period of function with quantum operations
 		PeriodTries <- 15
 		success <- FALSE
 		Ptries <- 0
@@ -58,67 +43,40 @@ Shor <- function(N,trials=150,random=FALSE){
 			Ptries <- Ptries + 1
 
 			#Set up input register
-			v <- intket(0,l)
+			v <- intket(0,l)			#l qubits all at |0>
 
 			#Apply H to input
-			Hg <- H()
-			for(j in 2:l)				#Build up Hadamard operator depending on input size
-				Hg <- tensor(Hg,H())
-			v <- U(Hg,v)
+			v <- many(H(),l,v)			#Apply H gate to all qubits
 
 			#Add |0000> target register to v
 			v <- tensor(v,intket(0,l))
-			#print(paste("Input ket has length",length(v)))
-			#print(dirac(v))
 
 			#Do quantum oracle
 			v <- U(m,v)
-			#barplot(abs(t(v)))
-
-			#Measure output of oracle
-			#Measurement can be useful from a conceptual perspective
-			#But not necessary in practice, see "A Course in Quantum Computing" by Loceff
-			#v <- measure(v,5,6,7,8)		
-			#print(paste("Measured ket has length",length(v)))
-			#print(dirac(v))
 
 			#QFT on input register
 			v <- QFT(v)
 			#barplot(abs(t(v)))
 
-			#Find Max Values (just for info)
-			#mvals <- rep(0,10)
-			#absv <- abs(v)
-			#for(j in 1:10){
-			#	mvals[j] <- which.max(absv)
-			#	absv[mvals[j]] <- 0
-			#}
-			#print("Max amplitudes")
-			#print(mvals-1)
-			#back <- v
+			#Measure the ket
 			vv <- measure(v)
-			v <- vv[[1]]
-			y <- vv[[2]]
+			v <- vv[[1]]			#The ket after measurement
+			y <- vv[[2]]			#Integer value of state that was measured
 
-			#y <- bitwShiftR(y,4)
-			y <- floor(y/2^l)
-			print(paste("Performed measurement on and got"))
-			print(dirac(v))
-			print(paste("Which means input register has value",y))
+			y <- floor(y/2^l)		#take just the first l qubits
+			print(paste("Quantum measurement produces",dirac(v),"  Input Register =",y))
 
-			frac <- CFA(y/2^4)
-			p <- frac[2]
+			frac <- CFA(y/2^4)		#Use continued fractions algorithm to classically find period from measured value
+			p <- frac[2]			#2nd element returned from function
 
-			print(paste("Continued fractions determined the period is",p))
+			print(paste("CFA finds period",p))
 
-			if(f(1) == f(1+p)){
-				print(paste(f(1),f(1+p)))
-				print("Period Finding: Success")
+			if(f(1) == f(1+p)){									#Test periodicity
+				print("Correct period found")
 				if(p %% 2 == 1){
-					print("Odd period: Failure (Reattempt)")
+					print("Failure (Odd Period)")
 				} else{
 					success <- TRUE
-					#return(back)
 				}
 			} else{
 				print("Period Finding: Failure (Reattempt)")
@@ -127,7 +85,7 @@ Shor <- function(N,trials=150,random=FALSE){
 
 		if(success){
 			x <- a^(p/2)
-			print(paste("Computed x is",x))
+			print(paste("Value derives from a and p, x =",x))
 
 			print(paste("x mod N =",x %% N))
 			if(x %% N == 1){
@@ -136,12 +94,12 @@ Shor <- function(N,trials=150,random=FALSE){
 				print("Equal -1 (mod N) and therefore incorrect (Reattempt)")
 			} else {
 				modNSuccess <- TRUE
-				print(paste("Factors of",N,"are",gcd(x+1,N),"and",gcd(x-1,N)))
+				print(paste("Success: Factors of",N,"are",gcd(x+1,N),"and",gcd(x-1,N)))
 				return(c(gcd(x+1,N),gcd(x-1,N)))
 			}
 		}
-		print("Number of attempts exceeded, number not factored")
 	}
+	print("Number of attempts exceeded, number not factored")
 }
 
 

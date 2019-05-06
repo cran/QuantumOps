@@ -1,6 +1,11 @@
 
 #' @export
 extractMNIST <- function(data,labels,s,centercrop=TRUE){
+	if(centercrop)
+		nCols <- 256
+	else
+		nCols <- 28*28
+
 	#get data ready
 	imfile <- file(data,"rb")
 	d <- readBin(imfile,integer(),4,endian="big")
@@ -10,7 +15,7 @@ extractMNIST <- function(data,labels,s,centercrop=TRUE){
 	d <- readBin(lbfile,integer(),2,endian="big")
 	print(paste("Label set has",d[2],"labels"))
 
-	x <- matrix(,nrow=s,ncol=256)
+	x <- matrix(,nrow=s,ncol=nCols)
 	for(j in 1:s){
 		t <- readBin(imfile,integer(),28*28,endian="big",size=1,signed=FALSE)
 		if(centercrop){

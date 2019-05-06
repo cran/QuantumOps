@@ -23,14 +23,19 @@ dirac <- function(ket){
 
 			#Format coefficient
 			istring <- ""
+			lp <- ""
+			rp <- ""
 			v <- ket[x,1]
-			if(Im(v) < 1e-15){
+			if(abs(Im(v)) < 1e-15){
 				v <- Re(ket[x,1])
 			} else if(Re(v) < 1e-15){
 				v <- Im(ket[x,1])
 				istring <- "i"
+			} else{
+				lp <- "("
+				rp <- ")"
 			}
-			s <- paste(s,signif(v,digits=3),istring,"|",b,">",sep="")						#copy into dirac rep
+			s <- paste(s,lp,signif(v,digits=3),istring,rp,"|",b,">",sep="")						#copy into dirac rep
 		}
 	}
 	s

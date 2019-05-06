@@ -111,15 +111,19 @@ QuantumMNIST256Classifier <- function(
 	#Run Network on validation input set
 	networkValidate <- function(m){
 		N <- dim(vdata)[1]							#number of samples in validation set		
-		p <- rep(0,N)		
+		p <- rep(0,N)								#probability of measuring correct result
+		r <- rep(0,N)								#if probability of correct result is higher than 50%
 		for(j in 1:N){								#for each validation input
 			v <- do.call(ket,as.list(vdata[j,]))	#create ket of input
 			v <- qapp(v,m)							#apply the circuit
 			p[j] <- prob1(v)						#probability of measuring 1
 			if( vlabels[j] != digit)
 				p[j] <- 1 - p[j]					#flip if target digit is different than current input
+			if( p[j] > 0.5)
+				r[j] <- 1
 		}
-		write(pp("Network achieves ",mean(p),"accuracy on validation set"),file=filename,append=TRUE)
+		write(pp("With a single measurement:    Network achieves ",mean(p),"accuracy on validation set"),file=filename,append=TRUE)
+		write(pp("With a repeated measurements: Network achieves ",mean(r),"accuracy on validation set"),file=filename,append=TRUE)
 	}
 
 	#Run Network on input set
