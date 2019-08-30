@@ -1,3 +1,13 @@
+# QuantumOps 2.5.3
+## Major changes
+QuantumClassifier is a new function which is very similar to QuantumMNIST256Classifier. This new version allows for the specification of the number of qubits used, the depth of the circuit, and the ranges of the controlled gates for each block. 
+
+controlled function is now more general, allowing for the control and target qubits to be anywhere in the input ket. Functionality is exactly the same as cntrld function, except inputs are specified in a vector rather than a list, which fits R methodology
+
+testGate is a new function that takes an input gate and tries different inputs and displays the output. Useful for testing user defined gates.
+
+
+
 # QuantumOps 2.5.2
 ## Major changes
 New functions for Steane encoding and error correction

@@ -68,4 +68,7 @@ export(singleSWAP)
 export(swapTest)
 export(Steane)
 export(SteaneCorrect)
-
+export(repeatTensor)
+export(testGate)
+export(gcd)
+export(QuantumClassifier)

@@ -40,7 +40,7 @@ QuantumMNIST256Classifier <- function(
 		#copy set of gates to temproray gate set
 		gc <- g
 		if(param == "a"){
-			gc[[gateNo]] <- G(alpha[gateNo]+pi/2,beta[gateNo],gamma[gateNo])		#replace 1 gate with derivatie wrt alpha
+			gc[[gateNo]] <- G(alpha[gateNo]+pi/2,beta[gateNo],gamma[gateNo])		#replace 1 gate with derivative wrt alpha
 		} else if(param == "b"){
 			if(which == 1){
 				gc[[gateNo]] <- G(alpha[gateNo],beta[gateNo]+pi/2,0)				#replace 1 gate with derivatie wrt beta
@@ -54,7 +54,7 @@ QuantumMNIST256Classifier <- function(
 				gc[[gateNo]] <- G(alpha[gateNo],pi,gamma[gateNo]+pi/2)
 			}
 		}
-		if(param != "")
+		if(param != "" && invert)
 			gc[[gateNo]] <- -1*gc[[gateNo]]
 
 		#Construct  circuit

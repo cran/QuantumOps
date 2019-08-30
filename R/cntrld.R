@@ -22,22 +22,27 @@ cntrld <- function(gate,n,...){
 	tQubit <- tQubit + 1
 
 	#Build the operator, which is gate applied just to target Qubit
-	if(tQubit == 1){				#if target is first qubit
-		operator <- gate			#it is gate, tensored with I for all other qubits
-		for(j in 2:n)
-			operator <- tensor(operator,I())
-	} else{
-		operator <- I()				#otherwise, first qubit gets I
-		if(tQubit != 2){			#and all others up to target qubit
-			for(j in 2:(tQubit-1))
+	if(d == 2){							#If it is a single qubit gate, proceed as normal, fully general (gate can be applied to any qubit in ket)
+		if(tQubit == 1){				#if target is first qubit
+			operator <- gate			#it is gate, tensored with I for all other qubits
+			for(j in 2:n)
 				operator <- tensor(operator,I())
+		} else{
+			operator <- I()				#otherwise, first qubit gets I
+			if(tQubit != 2){			#and all others up to target qubit
+				for(j in 2:(tQubit-1))
+					operator <- tensor(operator,I())
+			}
+			operator <- tensor(operator,gate)	#target qubit gets gate
+			if(tQubit != n)
+				for(j in (tQubit+1):n)			#I for all remaining qubits
+					operator <- tensor(operator,I())
 		}
-		operator <- tensor(operator,gate)	#target qubit gets gate
-		if(tQubit != n)
-			for(j in (tQubit+1):n)			#I for all remaining qubits
-				operator <- tensor(operator,I())
+	} else{		#Gate is NOT a single qubit gate, in this case it is restricted to being applied to the last qubits in ket (loss of generality)
+		CQubits <- c(CQubits,tQubit)		#in this case, the list of qubits are ALL control qubits (last is not the target as target is predefined)
+		operator <- repeatTensor(I(),n-log(d,base=2))
+		operator <- tensor(operator,gate)
 	}
-
 
 	#For each basis state
 	for(j in 0:(D-1)){
@@ -49,20 +54,3 @@ cntrld <- function(gate,n,...){
 }
 
 
-
-
-#for(r in 0:1){
-#		for(c in 0:1){
-#			pp(r,c)
-#			rows <- which( b[,CQubits] == 1 & b[,tQubit] == r)
-#			cols <- which( b[,CQubits] == 1 & b[,tQubit] == c)
-#			pp("rows",rows)
-#			pp("cols",cols)
-#			#g[  rows , cols  ] <- gate[r+1,c+1]
-#			for(j in 1:length(rows)){
-#				for(k in 1:length(cols)){
-#					g[rows[j],cols[k]] <- gate[r+1,c+1]
-#				}
-#			}
-#		}
-#	}

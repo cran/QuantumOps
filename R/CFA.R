@@ -1,4 +1,3 @@
-#bit-wise mod 2 add two integers
 #' @export
 CFA <- function(y,epsilon=1e-2){
 	x <- y

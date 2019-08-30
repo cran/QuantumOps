@@ -2,24 +2,27 @@
 \alias{controlled}
 \title{controlled}
 \usage{
-controlled(gate,nCQubits=1)
+controlled(gate,n,cQubits,tQubit)
 }
 \arguments{
-  \item{gate}{ Matrix representation of a quantum gate   }
+  \item{gate}{ single qubit gate to create controlled version of   }
 
-  \item{nCQubits}{Integer that specifies how many control qubits the gate should have. Default of 1}
+  \item{n}{ Number of qubits in the ket, including target, control, and all other qubits}
+
+  \item{cQubits}{Vector of qubit indices. There can be between 1 and n-1 control qubits, where n is the number of qubits in the ket. Qubits are indexed from 0, starting at the most significant qubit}
+
+  \item{tQubit}{Indiced of the target qubit. Qubits are indexed from 0, starting at the most significant qubit}
 }
 
 \value{
-Matrix representing a controlled version of the input gate
+A matrix representing the operation of a controlled qubit gate on any subset of the input ket
 }
 
 \description{
-Returns a matrix representation of a quantum gate which is a controlled version of the input.
+Creates a matrix representing a controlled gate on a system of qubits. The target and control qubits can be located at arbitrarying positions.
 }
 
 \examples{
- controlled(mm(0,1,1,0))
- controlled(X())
- controlled(X(),2)
+ controlled(X(),n=2,cQubits=0,tQubit=1)
+ controlled(X(),n=4,cQubits=c(0,1,2),tQubit=3)
 }
