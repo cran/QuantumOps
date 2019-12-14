@@ -5,8 +5,10 @@ single <- function(gate,n,t,...){
 	#For indexing in R makes this over complicated
 	if(t == 1){			#t is target qubit
 		g <- gate
-		for(j in 2:n)
-			g <- tensor(g,I())
+		if(n > 1){
+			for(j in 2:n)
+				g <- tensor(g,I())
+		}
 	} else if(t == n){
 		g <- I()
 		if(t > 2){

@@ -1,3 +1,21 @@
+# QuantumOps 3.0.0
+## Major changes
+Functionality has been added for simulating operations by cycle, where cycle means the a single operation applied to a register of qubits. The general form is a list. For example, a 5-cycle operation on 2 qubits will be a list of length 5, where each entry is a 4x4 matrix representing the operation for that cycle. 
+
+Density matrix representation has been added, which allows for more accurate simulation. convert\_ket2DM is a function that converts kets to density matrix format. opDM is a function that performs operations with density matrices. 
+
+Noise models, including stochastic Pauli noise, Coherent noise, and Amplitude Damping, have been added which can be applied to density matrices.
+
+Automated Randomized Compiling has been added, which can serve as a noise mitigation technique.
+
+QuantumOps can now use the gridsynth gate decomposition algorithm. The decomposition itself has NOT been implemented, but required the binary file which has been provided at  . QuantumOps can be used to generate input and collect output from the binary. Additionally, QuantumOps uses quantum circuits from  to generate controlled 2-qubit versions of the decomposed gates.
+
+## Minor changes
+QAOA, QuantumClassifier, and QFT have been augmented with the ability to return the circuit by cycle. Meaning that, instead of a single matrix, they can return a list of matrices which represent the operation at each cycle (time step). This enables use with RandomizeCompile and the different error models
+
+## Bug fixes
+QuantumClassifier has parameter updates in the wrong direction! They have now been flipped to be correct
+
 # QuantumOps 2.5.3
 ## Major changes
 QuantumClassifier is a new function which is very similar to QuantumMNIST256Classifier. This new version allows for the specification of the number of qubits used, the depth of the circuit, and the ranges of the controlled gates for each block. 

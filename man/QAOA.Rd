@@ -2,7 +2,7 @@
 \alias{QAOA}
 \title{QAOA}
 \usage{
-QAOA(clauses,p=1,gamma=pi/p,beta=pi/(2*p),displayProgress=FALSE)
+QAOA(clauses,p=1,gamma=pi/p,beta=pi/(2*p),displayProgress=FALSE,byCycle=FALSE)
 }
 \arguments{
   \item{clauses}{ Matrix that specifies the clauses. Each row is a clause. Each row must contain the same number of columns as qubits, the bit length of the clauses. 0 and 1 are values which are added to clause, ignored bits should be set to any other value. }
@@ -14,6 +14,8 @@ QAOA(clauses,p=1,gamma=pi/p,beta=pi/(2*p),displayProgress=FALSE)
   \item{beta}{Angle for U(B,b), currently the same for all iterations. Should be between 0 and pi}
 
   \item{displayProgress}{Boolean which specifies if progress should be shown. If TRUE, a bar plot is continually updated showing the amplitudes}
+
+  \item{byCycle}{ Boolean which specifies if function should return the circuit. If TRUE, rather than performing the algorithm it will generate and return the equivalent circuit.}
 }
 
 \value{

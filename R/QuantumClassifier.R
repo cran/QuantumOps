@@ -1,10 +1,11 @@
 
 
 QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
-								data=NULL,labels=NULL,digit=0,
-								eta=1,decay=1,bsc=1,t=20,tag="",pl=TRUE,train=TRUE,
-								validT=FALSE,vdata=NULL,vlabels=NULL,
-								pretrained=FALSE,alpha=NULL,beta=NULL,gamma=NULL ){
+			data=NULL,labels=NULL,digit=0,
+			eta=1,decay=1,bsc=1,t=20,tag="",pl=TRUE,train=TRUE,
+			validT=FALSE,vdata=NULL,vlabels=NULL,
+			pretrained=FALSE,alpha=NULL,beta=NULL,gamma=NULL,bias=NULL,
+		       	writeParameters=FALSE,outputPath=NULL	){
 
 	filename <- "QuantumClassifierOutput"
 	imagename <- "QuantumClassifierProbabilties"
@@ -26,9 +27,9 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 		alpha <- runif(Ngates,0,2*pi)
 		beta <- runif(Ngates,0,2*pi)
 		gamma <- runif(Ngates,0,2*pi)
+		bias <- 0.0
 	}
-	bias <- 0.5			#and bias
-	
+		
 	#Vectors for gradients
 	dC_da <- rep(0,Ngates)
 	dC_db <- rep(0,Ngates)
@@ -43,7 +44,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 	#which indicates whether its the first or 2nd term (relevant for beta and gamma)
 	#gateNo is the gate identifier
 	#invert flips the sign (relevant for controlled gates)
-	ckt <- function(param="",which=1,gateNo=0,invert=FALSE){
+	ckt <- function(param="",which=1,gateNo=0,invert=FALSE,byCycle=FALSE,byGateCycle=FALSE){
 
 		#copy set of gates to temproray gate set
 		gc <- g
@@ -67,30 +68,56 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 
 		#Generate circuit matrix
 		M <- diag(2^n)				#start with identity matrix for n qubits
+		ckt_ByCycle <- list()			#If getting the circuit (full matrix for each cycle)
+		#This is how gates will be reported to the Gate Decomposition
+		gates_ByCycle <- list()			#There is a list, each entry of which is for each cycle of the circuit
+		#Each entry of the list, will be another list, which has vectors as elements
+		#The vectors contain [ 1 or 2 (1/2 qubit gate) , control qubit , target qubit ]
+		#alpha,beta,gamma for each gate should be stored externally, use those
+
 		#For each block
 		for(b in 1:B){
 			idx <- GatesBeforeBlock[b] + 1		#Each block has some number of gates (R indexes from 1)
 			#Build initial parallel single qubit gates
 			m <- gc[[idx]]								#gate on qubit 0
-			for(j in 2:n)
+			gateCycle <- list(c(1,-1,0))	#Single qubit gate, on qubit 0
+			for(j in 2:n){
 				m <- tensor(m,gc[[idx+j-1]])			#gates on qubits 1-n
+				gateCycle <- c(gateCycle, list( c(1,-1,j-1) ))
+			}
 
 			M <- m %*% M								#Add to M
+			ckt_ByCycle <- c( ckt_ByCycle , list(m) )				#And also to list
+			gates_ByCycle <- c(gates_ByCycle, list(gateCycle))
 
 			#Now do n controlled gates
 			j <- 1:nControlledGates[b]
 			target <- rev((j*r[b] - r[b] ) %% n)		#Target determined by (r)ange for this (b)lock
 			control <- rev((j*r[b]) %% n)		#Same for control
-			for(j in 0:(nControlledGates[b]-1)){		
-				M <- cntrld(gate=gc[[idx+n+j]] , n=n, control[j+1], target[j+1]) %*% M
+			for(j in 0:(nControlledGates[b]-1)){	
+				m <- cntrld(gate=gc[[idx+n+j]] , n=n, control[j+1], target[j+1])
+				M <- m %*% M
+				ckt_ByCycle <- c( ckt_ByCycle , list(m) )
+				gates_ByCycle <- c( gates_ByCycle, list(list(c(2,control[j+1],target[j+1]))) )	#Double list to match single
 			}
 		}
 		
 		#One last gate on quibt 0
-		M <- single(gate=gc[[Ngates]], n=n, t=0) %*% M
-
+		m <- single(gate=gc[[Ngates]], n=n, t=0)
+		M <- m %*% M
+		ckt_ByCycle <- c( ckt_ByCycle , list(m) )
+		gates_ByCycle <- c(gates_ByCycle, list(list( c(1,-1,0) )))	
+	
 		#Return M
-		M
+		if(byCycle == FALSE){
+			M
+		} else{
+			if(!byGateCycle){
+				ckt_ByCycle
+			}else{
+				gates_ByCycle
+			}
+		}
 	}
 
 	#apply circuit function
@@ -109,41 +136,60 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 		Re(adjoint(v) %*% Zop %*% w)
 	}
 
+	#Run Network on training or validation  set
+	networkTest <- function(M,d="Train"){
+		if(d == "Train"){
+			tdata <- data
+			tlabels <- labels 
+		}else if(d == "Test"){
+			tdata <- vdata
+			tlabels <- vlabels
+		}
+		N <- dim(tdata)[1]							#number of samples in validation set		
+		p <- rep(0,N)								#probability of measuring correct result
+		r <- rep(0,N)								#if probability of correct result is higher than 50%
+		probs <- rep(0,N)
+		for(j in 1:N){								#for each validation input
+			v <- do.call(ket,as.list(tdata[j,]))	#create ket of input
+			v <- qapp(v,M)							#apply the circuit
+			pr1 <- prob1(v)						#probability of measuring 1
+			p[j] <- pr1
+			probs[j] <- pr1
+			#target <- 1
+			#if( tlabels[j] != digit){
+			#	p[j] <- 1 - p[j]					#flip if target digit is different than current input
+			#	target <- 0
+			#}
+			#if( p[j] + bias > 0.5)
+			#	r[j] <- 1
+
+			if( tlabels[j] != digit){
+				target <- 0
+				if(p[j] + bias < 0.5)
+					r[j] <- 1
+				p[j] <- 1 - (p[j] + bias)
+			}else{
+				target <- 1
+				if(p[j] + bias >= 0.5)
+					r[j] <- 1
+				p[j] <- p[j] + bias
+			}
+
+			#pp("Target: ",tlabels[j],"->",target," Prob1: ",pr1)
+		}
+		pp("On",length(p),"inputs")
+		pp("The final bias value is ",bias)
+		write(pp("With a single measurement:    Network achieves ",mean(p),"accuracy on ",d," set"),file=filename,append=TRUE)
+		write(pp("With a repeated measurements: Network achieves ",mean(r),"accuracy on ",d," set"),file=filename,append=TRUE)
+		digitIdx <- which(tlabels == digit)
+		write(pp("For target digit: P1: ",mean(probs[digitIdx]),"  NetOut: ",mean(probs[digitIdx])+bias,"  Repeated Accuracy: ",mean(r[digitIdx])))
+		write(pp("For other digits: P1: ",mean(probs[-digitIdx]),"  NetOut: ",mean(probs[-digitIdx])+bias,"  Repeated Accuracy: ",mean(r[-digitIdx])))
+	}
 	#Run network on validation input set
 	networkValidate <- function(M){
-		N <- dim(vdata)[1]		#number of samples in validation set
-		p <- rep(0,N)								#probability of measuring correct result
-		r <- rep(0,N)								#if probability of correct result is higher than 50%
-		for(j in 1:N){								#for each validation input
-			v <- do.call(ket,as.list(vdata[j,]))	#create ket of input
-			v <- qapp(v,M)							#apply the circuit
-			p[j] <- prob1(v)						#probability of measuring 1
-			if( vlabels[j] != digit)
-				p[j] <- 1 - p[j]					#flip if target digit is different than current input
-			if( p[j] > 0.5)
-				r[j] <- 1
-		}
-		write(pp("With a single measurement:    Network achieves ",mean(p),"accuracy on validation set"),file=filename,append=TRUE)
-		write(pp("With a repeated measurements: Network achieves ",mean(r),"accuracy on validation set"),file=filename,append=TRUE)
+		networkTest(M,"Test")
 	}
 
-	#Run Network on training set
-	networkTest <- function(M){
-		N <- dim(data)[1]							#number of samples in validation set		
-		p <- rep(0,N)								#probability of measuring correct result
-		r <- rep(0,N)								#if probability of correct result is higher than 50%
-		for(j in 1:N){								#for each validation input
-			v <- do.call(ket,as.list(data[j,]))	#create ket of input
-			v <- qapp(v,M)							#apply the circuit
-			p[j] <- prob1(v)						#probability of measuring 1
-			if( labels[j] != digit)
-				p[j] <- 1 - p[j]					#flip if target digit is different than current input
-			if( p[j] > 0.5)
-				r[j] <- 1
-		}
-		write(pp("With a single measurement:    Network achieves ",mean(p),"accuracy on training set"),file=filename,append=TRUE)
-		write(pp("With a repeated measurements: Network achieves ",mean(r),"accuracy on training set"),file=filename,append=TRUE)
-	}
 
 	
 	if(train){
@@ -162,8 +208,10 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 		for(tr in 1:t){
 			print(paste("Iteration",tr,"of",t))
 
+
 			#For each sample provided
 			for(s in 1:N){
+				print("")
 				cat(paste("Sample",s))
 
 				#Set up input (need to check if power of n)
@@ -186,7 +234,8 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 				M <- ckt()
 
 				#Do a validation run
-				if(validT)
+	
+				if(validT && s==1)
 					networkValidate(M)
 				
 				#Apply input
@@ -203,8 +252,10 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 
 				#Compute gradients and update parameters
 				
-				dC_dbias <- (px-y)*1						#Compute gradient of bias term
-				bias <- bias - eta*dC_dbias		*bsc		#Update 
+				if( abs(bias) < 0.15 ){	#Prevent bias growing without bound
+					dC_dbias <- (px-y)*1						#Compute gradient of bias term
+					bias <- bias + eta*dC_dbias		*bsc		#Update 
+				}
 
 				#For each gate
 				cat(paste("Computing gradients for",Ngates,"gates:"))
@@ -230,7 +281,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 						daG <- 1/2*daG - 1/2*cmpr(p,pa)	#combine w/ difference
 					}
 					dC_da[j] <- daG * (px - y)	#find dC_da by adding desired directions
-					alpha[j] <- alpha[j] - eta*dC_da[j]
+					alpha[j] <- alpha[j] + eta*dC_da[j]
 
 					#beta
 					M2 <- ckt("b",1,j)
@@ -247,7 +298,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 						dbG <- 1/2*dbG - 1/2*dbG2
 					}
 					dC_db[j] <- dbG * (px - y)
-					beta[j] <- beta[j] - eta*dC_db[j]
+					beta[j] <- beta[j] + eta*dC_db[j]
 
 					#beta
 					M2 <- ckt("g",1,j)
@@ -264,7 +315,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 						dgG <- 1/2*dgG - 1/2*dgG2
 					}
 					dC_dg[j] <- dgG * (px - y)
-					gamma[j] <- beta[j] - eta*dC_dg[j]
+					gamma[j] <- beta[j] + eta*dC_dg[j]
 
 				}
 
@@ -276,6 +327,20 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 				pix[2,tr] <- pix[2,tr]/Nt				#Nt target digits
 				p1[1,tr] <- p1[1,tr]/(N-Nt)			
 				p1[2,tr] <- p1[2,tr]/Nt	
+			}
+			#If writing the output parameters as training happens
+			if(writeParameters){
+				#Write parameters to file for continuing later
+				pdir <- paste(outputPath,tag,"/",(tr+1) %% 2,"/",sep="")
+				if( !dir.exists(pdir) )
+					dir.create(pdir)
+				write(alpha,file=paste(pdir,"alpha",sep=""),ncolumns=1)
+				write(beta,file=paste(pdir,"beta",sep=""),ncolumns=1)
+				write(gamma,file=paste(pdir,"gamma",sep=""),ncolumns=1)
+				write(bias,file=paste(pdir,"bias",sep=""))
+				CKTl <- ckt(byCycle=TRUE)
+				for(j in 1:length(CKTl))
+					write(CKTl[[j]],file=paste(pdir,"m",j,sep=""),ncolumns=1)
 			}
 		}
 	}
@@ -291,6 +356,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 	}
 	M <- ckt()					#generate circuit
 	networkTest(M)				#run test
+	networkValidate(M)
 				
 	
 	#Plot output if the network was trained
@@ -304,7 +370,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 		dev.off()
 	}
 	
-	list(g,M,alpha,beta,gamma)
+	list(g,M,alpha,beta,gamma,ckt(byCycle=TRUE),ckt(byCycle=TRUE,byGateCycle=TRUE))
 }
 
 

@@ -3,10 +3,11 @@
 \title{QuantumClassifier}
 \usage{
 QuantumClassifier(	n=8,B=2,r=c(1,3),
-		data=NULL,labels=NULL,digit=0,
-		eta=1,decay=1,bsc=1,t=20,tag="",pl=TRUE,train=TRUE,
-		validT=FALSE,vdata=NULL,vlabels=NULL,
-		pretrained=FALSE,alpha=NULL,beta=NULL,gamma=NULL )
+			data=NULL,labels=NULL,digit=0,
+			eta=1,decay=1,bsc=1,t=20,tag="",pl=TRUE,train=TRUE,
+			validT=FALSE,vdata=NULL,vlabels=NULL,
+			pretrained=FALSE,alpha=NULL,beta=NULL,gamma=NULL,bias=NULL,
+		       	writeParameters=FALSE,outputPath=NULL	)
 }
 \arguments{
   \item{n}{Number of qubits that this the classifier will use. }
@@ -48,6 +49,12 @@ QuantumClassifier(	n=8,B=2,r=c(1,3),
   \item{beta}{beta values for gates if pretrained is set to TRUE, should be a vector of length equal to the number of gates in the circuit.}
 
   \item{gamma}{gamma values for gates if pretrained is set to TRUE, should be a vector of length equal to the number of gates in the circuit. }
+
+  \item{bias}{Bias applied to the output of the circuit.}
+
+  \item{writeParameters}{ Boolean specifying whether function should write the parameters as it trains. Useful when training takes a long time.}
+
+  \item{outputPath}{String which specifies path to write output parameters to if writeParameters is TRUE. Must have write priveleges in this directory. The function will create two directories inside outputPath, named 0 and 1, and will alternate output to each folder. This prevents corruption of output if interrupted.}
 }
 
 \value{
@@ -61,6 +68,7 @@ Quantum classifier which was proposed by Maria Schuld (2018). Consists of code b
 \examples{
  \dontrun{
  QuantumClassifier(n=8,B=2,r=c(1,3),
-    matrix(sample(256,replace=TRUE),nrow=1),array(1),0,1,1,.001,1,"test")
+    matrix(sample(256,replace=TRUE),nrow=1),
+	array(1),0,1,1,.001,1,"test")
  }
 }
