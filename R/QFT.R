@@ -1,5 +1,5 @@
 #' @export
-QFT <- function(input,byCycle=FALSE,swaps=TRUE,CliffordT=FALSE,prec=10){
+QFT <- function(input,byCycle=FALSE,swaps=TRUE,CliffordT=FALSE,prec=10,path="./"){
 	i <- complex(1,0,1)
 	if(length(input) == 1){				#input is constant specifying dimension (in # of qubits, not amplitudes)
 		if(byCycle == FALSE){			#Return as 1 matrix
@@ -33,7 +33,7 @@ QFT <- function(input,byCycle=FALSE,swaps=TRUE,CliffordT=FALSE,prec=10){
 						for(k in (j+1):(n-1) ){
 							print(paste("gate",k))
 							angle <- (2*pi) / (2^(k-j+1))
-							CKT <- DecomposeGate(g=angle,n=n,TwoQubit=TRUE,
+							CKT <- DecomposeGate(path=path,g=angle,n=n,TwoQubit=TRUE,
 										tQubit=j,cQubit=k,prec=prec)
 							QFTm <- c(QFTm,CKT)
 						}

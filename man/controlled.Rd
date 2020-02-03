@@ -11,7 +11,7 @@ controlled(gate,n,cQubits,tQubit)
 
   \item{cQubits}{Vector of qubit indices. There can be between 1 and n-1 control qubits, where n is the number of qubits in the ket. Qubits are indexed from 0, starting at the most significant qubit}
 
-  \item{tQubit}{Indiced of the target qubit. Qubits are indexed from 0, starting at the most significant qubit}
+  \item{tQubit}{Index of the target qubit. Qubits are indexed from 0, starting at the most significant qubit}
 }
 
 \value{
@@ -19,7 +19,7 @@ A matrix representing the operation of a controlled qubit gate on any subset of 
 }
 
 \description{
-Creates a matrix representing a controlled gate on a system of qubits. The target and control qubits can be located at arbitrarying positions.
+Creates a matrix representing a controlled gate on a system of qubits. The target and control qubits can be located at arbitrary positions.
 }
 
 \examples{

@@ -13,7 +13,7 @@ G(a,b,g,p=0,...)
 }
 
 \value{
-MatiG of the G gate or ket after an G gate is applied
+Matrix of the G gate or ket after an G gate is applied
 }
 
 \description{

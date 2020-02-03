@@ -13,7 +13,7 @@ Integer value of bits
 }
 
 \description{
-Takes a vector of unisgned bits with MSB first and produces integer value
+Takes a vector of unsigned bits with MSB first and produces integer value
 }
 
 \examples{

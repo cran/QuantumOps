@@ -1,3 +1,11 @@
+# QuantumOps 3.0.1
+##Major changes
+Phase Damping has been added as a noise model
+
+## Bug fixes
+Incorrect application of the QFT in Shors algorithm has been fixed. It should only be applied to the first register of qubits, and had been applied to both registers. 
+
+
 # QuantumOps 3.0.0
 ## Major changes
 Functionality has been added for simulating operations by cycle, where cycle means the a single operation applied to a register of qubits. The general form is a list. For example, a 5-cycle operation on 2 qubits will be a list of length 5, where each entry is a 4x4 matrix representing the operation for that cycle. 
@@ -8,7 +16,7 @@ Noise models, including stochastic Pauli noise, Coherent noise, and Amplitude Da
 
 Automated Randomized Compiling has been added, which can serve as a noise mitigation technique.
 
-QuantumOps can now use the gridsynth gate decomposition algorithm. The decomposition itself has NOT been implemented, but required the binary file which has been provided at  . QuantumOps can be used to generate input and collect output from the binary. Additionally, QuantumOps uses quantum circuits from  to generate controlled 2-qubit versions of the decomposed gates.
+QuantumOps can now use the gridsynth gate decomposition algorithm. The decomposition itself has NOT been implemented, but required the binary file which has been provided at https://www.mathstat.dal.ca/~selinger/newsynth/. QuantumOps can be used to generate input and collect output from the binary. Additionally, QuantumOps uses quantum circuits from "A Meet-in-the-Middle Algorithm for Fast Synthesis of Depth-Optimal Quantum Circuits" (Amy 2013) to generate controlled 2-qubit versions of the decomposed gates.
 
 ## Minor changes
 QAOA, QuantumClassifier, and QFT have been augmented with the ability to return the circuit by cycle. Meaning that, instead of a single matrix, they can return a list of matrices which represent the operation at each cycle (time step). This enables use with RandomizeCompile and the different error models

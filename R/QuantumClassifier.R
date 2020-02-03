@@ -7,6 +7,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 			pretrained=FALSE,alpha=NULL,beta=NULL,gamma=NULL,bias=NULL,
 		       	writeParameters=FALSE,outputPath=NULL	){
 
+	parity <- 0	#For writing parameters
 	filename <- "QuantumClassifierOutput"
 	imagename <- "QuantumClassifierProbabilties"
 	if(tag != ""){
@@ -327,11 +328,16 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 				pix[2,tr] <- pix[2,tr]/Nt				#Nt target digits
 				p1[1,tr] <- p1[1,tr]/(N-Nt)			
 				p1[2,tr] <- p1[2,tr]/Nt	
-			}
 			#If writing the output parameters as training happens
 			if(writeParameters){
-				#Write parameters to file for continuing later
-				pdir <- paste(outputPath,tag,"/",(tr+1) %% 2,"/",sep="")
+				print("Writing Parameters")	
+				#Create top level folder
+				pdir <- paste(outputPath,"/",tag,sep="")
+				if( !dir.exists(pdir) )
+					dir.create(pdir)
+				#Write parameters to files for continuing later
+				pdir <- paste(outputPath,"/",tag,"/",parity,"/",sep="")
+				parity <- 1 - parity	#Switch between 0/1
 				if( !dir.exists(pdir) )
 					dir.create(pdir)
 				write(alpha,file=paste(pdir,"alpha",sep=""),ncolumns=1)
@@ -341,6 +347,7 @@ QuantumClassifier <- function(	n=8,B=2,r=c(1,3),
 				CKTl <- ckt(byCycle=TRUE)
 				for(j in 1:length(CKTl))
 					write(CKTl[[j]],file=paste(pdir,"m",j,sep=""),ncolumns=1)
+			}
 			}
 		}
 	}

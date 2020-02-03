@@ -15,7 +15,7 @@ CoherentNoise(p,theta,randomRotation=FALSE)
 }
 
 \description{
- Implements a simplified model of coherent noise as used in . It rotates each qubit around the z-axis by the specified amount. If randomRoation is set, it will rotate around the X, Y, or Z axis, which is chosen at random. Randomizing provides interesting side effects but is less representative of quantum noise.
+ Implements a model of coherent noise as used in <DOI:10.1038/s41534-018-0106-y>. It rotates each qubit around the z-axis by the specified amount. If randomRoation is set, it will rotate around the X, Y, or Z axis, which is chosen at random. Randomizing provides interesting side effects but is less representative of quantum noise.
 }
 
 \examples{

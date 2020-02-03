@@ -9,7 +9,7 @@ FullAdder(n=4,cin=0,a=1,b=2,cout=3)
   \item{cin}{ index of the carry in (qu)bit  }
   \item{a}{ Index of the first operand (qu)bit  }
   \item{b }{ Index of the second operand (qu)bit  }
-  \item{cout }{ Index where the output carry (qu)bit will be places  }
+  \item{cout }{ Index where the output carry (qu)bit will be placed  }
 }
 
 \value{

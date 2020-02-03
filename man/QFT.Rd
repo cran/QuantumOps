@@ -2,7 +2,7 @@
 \alias{QFT}
 \title{QFT}
 \usage{
-QFT(input,byCycle=FALSE,swaps=TRUE,CliffordT=FALSE,prec=10)
+QFT(input,byCycle=FALSE,swaps=TRUE,CliffordT=FALSE,prec=10,path="./")
 }
 \arguments{
   \item{input}{ Either integer specifying size of operation (in number of qubits it is applied to) or input ket to apply QFT to   }
@@ -10,6 +10,7 @@ QFT(input,byCycle=FALSE,swaps=TRUE,CliffordT=FALSE,prec=10)
   \item{swaps}{Boolean which specifies if the the SWAP gates required at the end of the QFT should be inserted. May not be necessary if qubit reordering is acceptable. Only valid if byCycle is TRUE.}
   \item{CliffordT}{Boolean which specifies if the generated circuit should be decomposed into the Clifford+T set. Only valid if byCycle is TRUE.}
   \item{prec}{The precision of the decomposition into the Clifford+T set. Only valid if byCycle and CliffordT are both TRUE.}
+  \item{path}{Path from current working directory to the gridsynth binary. Only used if CliffordT is set to TRUE. The gridsynth binary is not contained in QuantumOps but available from https://www.mathstat.dal.ca/~selinger/newsynth/}
 }
 
 \value{

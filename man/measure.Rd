@@ -15,7 +15,7 @@ A list with the first item a column vector containing normalized amplitudes of t
 }
 
 \description{
-Probabilistically measures the input ket. By default measures all qubits, but if a list of integers is supplied it will measure only those qubits. Returns a list containing the state of the ket after measurement along with integer value of the state that was measured. Additionally, returns a vector of the measured binary value if a list of qubits to measure was specified. 
+Probabilistically measures the input ket. By default measures all qubits, but if a list of integers is supplied it will measure only those qubits. Returns a list containing the state of the ket after measurement along with integer value of the state that was measured. Additionally, returns a vector of the measured binary values, if a list of qubits to measure was specified. 
 }
 
 \examples{

@@ -21,7 +21,7 @@ Shor <- function(N,trials=150,random=FALSE){
 		#"random" number
 		if(random | ( N != 15 & N != 21 ) ){
 			while(gcd(a,N) != 1)
-				a <- a + 1
+				a <- a+1
 		} else{						#Know these numbers work well
 			if(N == 15){			#In general, these are random because number to factor is new
 				a <- 2
@@ -34,6 +34,7 @@ Shor <- function(N,trials=150,random=FALSE){
 		#Define function f(x) = a^x mod N		Period of this function is related to prime factors
 		f <- exponentialMod(a,N)				#Replaces f <- function(x){a^x %% N}
 		m <- Uf(f,l,l)							#m is f in unitary matrix form (quantum oracle)
+
 
 		#Try to find period of function with quantum operations
 		PeriodTries <- 15
@@ -54,9 +55,11 @@ Shor <- function(N,trials=150,random=FALSE){
 			#Do quantum oracle
 			v <- U(m,v)
 
+
 			#QFT on input register
-			v <- QFT(v)
+			v <- tensor(QFT(l),diag(2^l)) %*% v
 			#barplot(abs(t(v)))
+
 
 			#Measure the ket
 			vv <- measure(v)
@@ -66,7 +69,9 @@ Shor <- function(N,trials=150,random=FALSE){
 			y <- floor(y/2^l)		#take just the first l qubits
 			print(paste("Quantum measurement produces",dirac(v),"  Input Register =",y))
 
-			frac <- CFA(y/2^4)		#Use continued fractions algorithm to classically find period from measured value
+			#frac <- CFA(y/2^4)		#Use continued fractions algorithm to classically find period from measured value
+print(paste("Input to CFA:",y/2^l))
+			frac <- CFA(y/2^l)		#Use continued fractions algorithm to classically find period from measured value
 			p <- frac[2]			#2nd element returned from function
 
 			print(paste("CFA finds period",p))
